@@ -11,7 +11,7 @@ import org.knowm.xchart.demo.charts.ExampleChart;
 import org.knowm.xchart.style.Styler.LegendPosition;
 
 public class Chart extends JFrame implements ExampleChart<XYChart> {
-	
+
 	/**
 	 * 
 	 */
@@ -21,7 +21,7 @@ public class Chart extends JFrame implements ExampleChart<XYChart> {
 
 	@SuppressWarnings("rawtypes")
 	public Chart(double[] vector, int from, int to) {
-		
+
 		int n = Math.abs(from) + Math.abs(to) + 1;
 		xData = new double[n];
 		yData = new double[n];
@@ -41,25 +41,22 @@ public class Chart extends JFrame implements ExampleChart<XYChart> {
 			++j;
 		}
 
-		
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
-				
-//		new SwingWrapper(getChart()).displayChart();
+
+		// new SwingWrapper(getChart()).displayChart();
 		setBounds(950, 100, 500, 500);
 		@SuppressWarnings("unchecked")
-		JPanel panelChart = new XChartPanel(getChart());      
+		JPanel panelChart = new XChartPanel(getChart());
 		setVisible(true);
 		this.add(panelChart);
 		this.validate();
-		
+
 	}
-	
-	
 
 	@Override
 	public XYChart getChart() {
 		// Create Chart
-		
+
 		XYChart chart = new XYChartBuilder().width(500).height(500).title(getClass().getSimpleName()).xAxisTitle("X")
 				.yAxisTitle("Y").build();
 
@@ -69,7 +66,7 @@ public class Chart extends JFrame implements ExampleChart<XYChart> {
 		chart.getStyler().setDefaultSeriesRenderStyle(XYSeriesRenderStyle.Area);
 
 		// Series
-		chart.addSeries("a", xData, yData);
+		chart.addSeries("Figure", xData, yData);
 
 		return chart;
 	}

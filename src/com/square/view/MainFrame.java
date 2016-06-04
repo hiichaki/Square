@@ -131,6 +131,8 @@ public class MainFrame extends JFrame {
 
 					// Double.parseDouble(masTextField[j].getText());
 				} catch (Exception ex) {
+
+					System.out.println(ex.getCause());
 					JOptionPane.showMessageDialog(this, "Невірно задані значення", "Помилка",
 							JOptionPane.ERROR_MESSAGE);
 				}
@@ -245,15 +247,15 @@ public class MainFrame extends JFrame {
 	private void createPolynomFields(Integer degree, JPanel polynomPanel, JViewport polynomView) {
 
 		try {
-			
+
 			JLabel tmpPolynomLabel = new JLabel();
 			tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 
 			polynomPanel.removeAll();
-			
+
 			tmpTextField = new JTextField(5);
 			tmpTextField.setText("0");
-			
+
 			polynomPanel.add(tmpTextField);
 
 			for (int i = 0; i < degree; ++i) {
@@ -282,39 +284,40 @@ public class MainFrame extends JFrame {
 			for (Component tmp : polynomPanel.getComponents()) {
 				if (tmp.getClass().equals(JTextField.class)) {
 					((JTextField) tmp).addFocusListener(new FocusListener() {
-						
+
 						@Override
 						public void focusLost(FocusEvent e) {
 						}
-						
+
 						@Override
 						public void focusGained(FocusEvent e) {
 							((JTextField) tmp).selectAll();
-							
+
 						}
-					});;
+					});
+					;
 					((JTextField) tmp).addKeyListener(new KeyListener() {
-						
+
 						@Override
 						public void keyTyped(KeyEvent e) {
 						}
-						
+
 						@Override
 						public void keyReleased(KeyEvent e) {
-							if(e.getKeyChar()=='('){
-								((JTextField) tmp).setText(((JTextField) tmp).getText()+')');
-								((JTextField) tmp).setCaretPosition(((JTextField) tmp).getText().length()-1);
+							if (e.getKeyChar() == '(') {
+								((JTextField) tmp).setText(((JTextField) tmp).getText() + ')');
+								((JTextField) tmp).setCaretPosition(((JTextField) tmp).getText().length() - 1);
 							}
-							
+
 						}
-						
+
 						@Override
 						public void keyPressed(KeyEvent e) {
 						}
 					});
 				}
 			}
-			
+
 			repaint();
 			revalidate();
 
