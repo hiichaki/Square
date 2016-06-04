@@ -44,7 +44,7 @@ public class Integrator {
 	private void simpsonIntegrate(int eval, int from, int to) {
 		simpson = new SimpsonIntegrator();
 		
-		double integral = simpson.integrate(100000, uf, from, to);
+		double integral = simpson.integrate(eval, uf, from, to);
 		
 		results[0] = integral;
 
@@ -53,7 +53,7 @@ public class Integrator {
 	private void trapezoidIntegrate(int eval, int from, int to) {
 		trapeze = new TrapezoidIntegrator();
 		
-		double integral = trapeze.integrate(100000, uf, from, to);
+		double integral = trapeze.integrate(eval, uf, from, to);
 		
 		results[1] = integral;
 
@@ -62,7 +62,7 @@ public class Integrator {
 	private void rombergIntegrate(int eval, int from, int to) {
 		romberg = new RombergIntegrator();
 
-		double integral = romberg.integrate(100000, uf, from, to);
+		double integral = romberg.integrate(eval, uf, from, to);
 		
 		results[2] = integral;
 

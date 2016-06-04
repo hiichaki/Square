@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -24,7 +25,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
+import com.square.controller.App;
 import com.square.model.Integrator;
+
+import groovy.lang.GroovyShell;
 
 public class MainFrame extends JFrame {
 
@@ -37,6 +41,8 @@ public class MainFrame extends JFrame {
 	private JPanel resultPanel;
 	private double[] vector;
 
+	
+	
 	public MainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 818, 500);
@@ -92,7 +98,7 @@ public class MainFrame extends JFrame {
 		contentPane.add(toSpinner);
 		
 		JSpinner evalSpinner = new JSpinner();
-		evalSpinner.setModel(new SpinnerNumberModel(new Integer(10000), new Integer(1), null, new Integer(1)));
+		evalSpinner.setModel(new SpinnerNumberModel(new Integer(10000), new Integer(2100), null, new Integer(1)));
 		evalSpinner.setBounds(117, 71, 126, 20);
 		contentPane.add(evalSpinner);
 		
@@ -110,11 +116,19 @@ public class MainFrame extends JFrame {
 			}
 
 			vector = new double[masTextField.length];
-
+			
+			GroovyShell shell = App.createMathShell();
+			
 			for (int j = 0; j < masTextField.length; ++j) {
+				
 				try {
-					vector[j] = Double.parseDouble(masTextField[j].getText());
-				} catch (NumberFormatException ex) {
+					Object tmpObject = new Object();					
+					tmpObject = shell.evaluate(masTextField[j].getText());
+					
+					vector[j] = new Double(tmpObject.toString());
+					
+//					vector[j] = Double.parseDouble(masTextField[j].getText());
+				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(this, "Невірно задані значення", "Помилка",
 							JOptionPane.ERROR_MESSAGE);
 				}
@@ -238,7 +252,7 @@ public class MainFrame extends JFrame {
 			polynomPanel.removeAll();
 
 			JTextField tmpTextField = new JTextField(5);
-			tmpTextField.setText("0");
+			tmpTextField.setText("1");
 			polynomPanel.add(tmpTextField);
 
 			for (int i = 0; i < degree; ++i) {
@@ -246,9 +260,11 @@ public class MainFrame extends JFrame {
 				tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				polynomPanel.add(tmpPolynomLabel);
 				tmpTextField = new JTextField(5);
-				tmpTextField.setText("0");
+				tmpTextField.setText("1");
 				polynomPanel.add(tmpTextField);
-				if (i + 1 > 9) {
+				if( i + 1 > 99 ) {
+					tmpPolynomLabel = new JLabel("x " + sup.charAt((i + 1) / 100) + sup.charAt((i + 1) % 100));
+				} else if (i + 1 > 9) {
 					tmpPolynomLabel = new JLabel("x " + sup.charAt((i + 1) / 10) + sup.charAt((i + 1) % 10));
 				} else if (i == 0) {
 					tmpPolynomLabel = new JLabel("x ");

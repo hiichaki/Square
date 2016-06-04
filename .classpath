@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="E:/apache-maths/commons-math-2.2/commons-math-2.2.jar"/>
 	<classpathentry kind="lib" path="E:/XCharts/xchart-3.0.4/xchart-3.0.4.jar"/>
 	<classpathentry kind="lib" path="E:/XCharts/xchart-3.0.4/xchart-demo-3.0.4.jar"/>
+	<classpathentry kind="lib" path="E:/groovy/groovy-all-2.4.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
