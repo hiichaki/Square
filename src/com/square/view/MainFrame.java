@@ -25,6 +25,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import java.awt.Font;
 import javax.swing.JSeparator;
+import java.awt.Button;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame {
 
@@ -36,7 +39,7 @@ public class MainFrame extends JFrame {
 	private Integer degree;
 	private String sub = "₀₁₂₃₄₅₆₇₈₉";
 	private String sup = "⁰¹²³⁴⁵⁶⁷⁸⁹";
-	private JLabel tmpLabel_1;
+	private JPanel resultPanel;
 
 	public MainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,65 +56,14 @@ public class MainFrame extends JFrame {
 		contentPane.add(polynomScrollPanel);
 		JViewport polynomView = polynomScrollPanel.getViewport();
 		JPanel polynomPanel = new JPanel();
-		polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), polynomScrollPanel.getHeight()-10));
+		polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), polynomScrollPanel.getHeight() - 10));
 		polynomView.add(polynomPanel);
 
-		JPanel resultPanel = new JPanel();
+		resultPanel = new JPanel();
 		resultPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		resultPanel.setBounds(278, 11, 433, 296);
 		contentPane.add(resultPanel);
 		resultPanel.setLayout(new GridLayout(12, 1, 25, 0));
-
-		double[] vector = new double[3];
-		vector[0] = 1;
-		vector[1] = 2;
-		vector[2] = 3;
-		// vector[3] = 0.2;
-		// vector[4] = 2;
-
-		Integrator integ = new Integrator(vector);
-
-		double[] v = integ.getResults();
-		double[] d = integ.getDuration();
-
-		for (int i = 0; i < v.length; ++i) {
-			JLabel tmpLabel = null;
-			switch (i) {
-			case 0:
-				tmpLabel = new JLabel("Cімпсон: ");
-				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-				break;
-			case 1:
-				tmpLabel = new JLabel("Трапеції: ");
-				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-				break;
-			case 2:
-				tmpLabel = new JLabel("Ромберг: ");
-				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-				break;
-			}
-
-			tmpLabel.setText(tmpLabel.getText() + v[i]);
-			resultPanel.add(tmpLabel);
-			tmpLabel = new JLabel("Час виконання: " + d[i] + "ms");
-			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-			resultPanel.add(tmpLabel);
-			JSeparator separator = new JSeparator();
-			separator.setSize(new Dimension(resultPanel.getWidth(), 3));
-			resultPanel.add(separator);
-
-		}
-
-		JLabel tmpLabel;
-		tmpLabel = new JLabel("Сімпсон - Трапеція = " + Math.abs(((v[0] - v[1]) * 100) / v[0]) + " %");
-		tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		resultPanel.add(tmpLabel);
-		tmpLabel = new JLabel("Сімпсон - Ромберг = " + Math.abs(((v[0] - v[2]) * 100) / v[0]) + " %");
-		tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		resultPanel.add(tmpLabel);
-		tmpLabel = new JLabel("Трапеція - Ромберг = " + Math.abs(((v[1] - v[2]) * 100) / v[1]) + " %");
-		tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		resultPanel.add(tmpLabel);
 
 		JLabel degreeLabel = new JLabel("Степінь:");
 		degreeLabel.setBounds(25, 11, 75, 14);
@@ -121,7 +73,31 @@ public class MainFrame extends JFrame {
 		degreeField.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		degreeField.setBounds(110, 11, 58, 20);
 		contentPane.add(degreeField);
-				
+
+		Button integrateButton = new Button("Порахувати");
+
+		integrateButton.addActionListener(e -> {
+			Component[] components = polynomPanel.getComponents();
+			JTextField[] masTextField = new JTextField[(int) degreeField.getValue()];
+			int i = 0;
+			for (Component tmp : components) {
+				if (tmp.getClass().equals(JTextField.class)) {
+					masTextField[i] = (JTextField) tmp;
+					++i;
+				}
+			}
+			
+			double[] vector = new double[masTextField.length];
+			
+			for(int j = 0; j<masTextField.length; ++j) {
+				vector[j] = Double.parseDouble(masTextField[j].getText());
+			}
+			doAllIntegrations(vector);
+		});
+
+		integrateButton.setBounds(62, 313, 152, 22);
+		contentPane.add(integrateButton);
+
 		degreeField.addChangeListener(e -> {
 
 			try {
@@ -152,10 +128,9 @@ public class MainFrame extends JFrame {
 						tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 						polynomPanel.add(tmpPolynomLabel);
 					}
-					if(i>20) {
-						System.out.println("azaza");
-						polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), polynomPanel.getHeight() + 30));
-					}
+
+					polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), ((i / 2) + 1) * 25));
+
 				}
 				repaint();
 				revalidate();
@@ -165,5 +140,54 @@ public class MainFrame extends JFrame {
 			}
 		});
 
+	}
+
+	private void doAllIntegrations(double[] vector) {
+		
+		Integrator integ = new Integrator(vector);
+		resultPanel.removeAll();
+		double[] v = integ.getResults();
+		double[] d = integ.getDuration();
+
+		for (int i = 0; i < v.length; ++i) {
+			JLabel tmpLabel = null;
+			switch (i) {
+			case 0:
+				tmpLabel = new JLabel("Cімпсон: ");
+				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+				break;
+			case 1:
+				tmpLabel = new JLabel("Трапеція: ");
+				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+				break;
+			case 2:
+				tmpLabel = new JLabel("Ромберг: ");
+				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+				break;
+			}
+
+			tmpLabel.setText(tmpLabel.getText() + v[i]);
+			resultPanel.add(tmpLabel);
+			tmpLabel = new JLabel("Час виконання: " + d[i] + "ms");
+			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+			resultPanel.add(tmpLabel);
+			JSeparator separator = new JSeparator();
+			separator.setSize(new Dimension(resultPanel.getWidth(), 3));
+			resultPanel.add(separator);
+
+		}
+
+		JLabel tmpLabel;
+		tmpLabel = new JLabel("Сімпсон - Трапеція = " + Math.abs(((v[0] - v[1]) * 100) / v[0]) + " %");
+		tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		resultPanel.add(tmpLabel);
+		tmpLabel = new JLabel("Сімпсон - Ромберг = " + Math.abs(((v[0] - v[2]) * 100) / v[0]) + " %");
+		tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		resultPanel.add(tmpLabel);
+		tmpLabel = new JLabel("Трапеція - Ромберг = " + Math.abs(((v[1] - v[2]) * 100) / v[1]) + " %");
+		tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		resultPanel.add(tmpLabel);
+		resultPanel.repaint();
+		resultPanel.revalidate();
 	}
 }

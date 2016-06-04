@@ -28,19 +28,19 @@ public class Integrator {
 		simpsonIntegrate();
 		long endTime = System.nanoTime();
 
-		duration[0] = (endTime - startTime)/1000; 
+		duration[0] = (endTime - startTime)/10000; 
 	
 		startTime = System.nanoTime();;
 		trapezoidIntegrate();
 		endTime = System.nanoTime();
 		
-		duration[1] = (endTime - startTime)/1000; 
+		duration[1] = (endTime - startTime)/10000; 
 		
 		startTime = System.nanoTime();;
 		rombergIntegrate();
 		endTime = System.nanoTime();
 		
-		duration[2] = (endTime - startTime)/1000; 
+		duration[2] = (endTime - startTime)/10000; 
 			
 	}
 	
