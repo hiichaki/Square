@@ -4,5 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="E:/apache-maths/commons-math3-3.6.1/commons-math3-3.6.1.jar"/>
 	<classpathentry kind="lib" path="E:/apache-maths/commons-math-2.2/commons-math-2.2.jar"/>
+	<classpathentry kind="lib" path="E:/XCharts/xchart-3.0.4/xchart-3.0.4.jar"/>
+	<classpathentry kind="lib" path="E:/XCharts/xchart-3.0.4/xchart-demo-3.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

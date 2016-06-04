@@ -39,7 +39,7 @@ public class MainFrame extends JFrame {
 
 	public MainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 818, 486);
+		setBounds(100, 100, 818, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -156,8 +156,8 @@ public class MainFrame extends JFrame {
 		Button drawButton = new Button("Намалювати");
 		
 		drawButton.addActionListener(e -> {
-			new DrawFrame(vector);
-			
+//			new DrawFrame(vector);
+			new Chart(vector, (int)fromSpinner.getValue(), (int)toSpinner.getValue());
 		});
 		
 		drawButton.setBounds(487, 382, 152, 22);
