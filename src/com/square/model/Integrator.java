@@ -13,15 +13,14 @@ public class Integrator {
 	private TrapezoidIntegrator trapeze;
 	
 	private double[] results = new double[3];
+	private double[] duration = new double[3];
 	
 	private UnivariateFunction uf;
-	
 	
 	public Integrator(double[] vector) {
 		PolynomialFunction f = new PolynomialFunction(vector);
 		uf = (UnivariateFunction) new PolynomialFunction(vector);
 		
-
 		System.out.println("To String " + uf.toString());
 		System.out.println("Degree: " + f.degree() + "\n");
 		
@@ -29,24 +28,19 @@ public class Integrator {
 		simpsonIntegrate();
 		long endTime = System.nanoTime();
 
-		long duration = (endTime - startTime); 
-		System.out.println("Simpson: " + duration/1000 + "ms\n");
-		
+		duration[0] = (endTime - startTime)/1000; 
+	
 		startTime = System.nanoTime();;
 		trapezoidIntegrate();
 		endTime = System.nanoTime();
 		
-		duration = (endTime - startTime); 
-		
-		System.out.println("Trapezoid:" + duration/1000 + "ms\n");
+		duration[1] = (endTime - startTime)/1000; 
 		
 		startTime = System.nanoTime();;
 		rombergIntegrate();
 		endTime = System.nanoTime();
 		
-		duration = (endTime - startTime); 
-		
-		System.out.println("Romberg:" + duration/1000 + "ms\n");
+		duration[2] = (endTime - startTime)/1000; 
 			
 	}
 	
@@ -56,8 +50,6 @@ public class Integrator {
 		double integral = simpson.integrate(100000, uf, 2,3);
 		
 		results[0] = integral;
-		
-		System.out.println("Simpson integral : " + integral);
 
 	}
 	
@@ -67,8 +59,7 @@ public class Integrator {
 		double integral = trapeze.integrate(100000, uf, 2,3);
 		
 		results[1] = integral;
-		
-		System.out.println("Trapezoid integral : " + integral);
+
 	}
 	
 	private void rombergIntegrate() {
@@ -77,12 +68,17 @@ public class Integrator {
 		double integral = romberg.integrate(100000, uf, 2,3);
 		
 		results[2] = integral;
-		
-		System.out.println("Romberg integral : " + integral);
+
 	}
 	
-	public double[] getResults(){
+	public double[] getResults() {
 		return results;
+		
+	}
+	
+	public double[] getDuration() {
+		return duration;
+		
 	}
 	
 }
