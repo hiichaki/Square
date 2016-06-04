@@ -23,11 +23,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.OptionPaneUI;
 
 import com.square.model.Integrator;
-import java.awt.Label;
 
 public class MainFrame extends JFrame {
 
@@ -38,6 +35,7 @@ public class MainFrame extends JFrame {
 	private JPanel contentPane;
 	private String sup = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 	private JPanel resultPanel;
+	private double[] vector;
 
 	public MainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -111,7 +109,7 @@ public class MainFrame extends JFrame {
 				}
 			}
 
-			double[] vector = new double[masTextField.length];
+			vector = new double[masTextField.length];
 
 			for (int j = 0; j < masTextField.length; ++j) {
 				try {
@@ -133,9 +131,6 @@ public class MainFrame extends JFrame {
 		integrateButton.setBounds(71, 382, 152, 22);
 		contentPane.add(integrateButton);
 		
-		
-		
-	
 		fromSpinner.addChangeListener(e -> {
 			
 			toSpinner.setModel(new SpinnerNumberModel( new Integer((Integer)toSpinner.getValue()), (Integer)fromSpinner.getValue()+1, null, 1.0));
@@ -157,6 +152,16 @@ public class MainFrame extends JFrame {
 		JLabel evalLabel = new JLabel("Точність:");
 		evalLabel.setBounds(24, 74, 95, 17);
 		contentPane.add(evalLabel);
+		
+		Button drawButton = new Button("Намалювати");
+		
+		drawButton.addActionListener(e -> {
+			new DrawFrame(vector);
+			
+		});
+		
+		drawButton.setBounds(487, 382, 152, 22);
+		contentPane.add(drawButton);
 		degreeSpinnerField.addChangeListener(e -> {
 			createPolynomFields((Integer) degreeSpinnerField.getValue(), polynomPanel, polynomView);
 			
@@ -253,7 +258,7 @@ public class MainFrame extends JFrame {
 				tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				polynomPanel.add(tmpPolynomLabel);
 
-				polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), ((i / 3) + 5) * 25));
+				polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), ((i / 3) +2 ) * 25));
 
 			}
 

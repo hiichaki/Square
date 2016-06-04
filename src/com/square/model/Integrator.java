@@ -18,9 +18,9 @@ public class Integrator {
 	private UnivariateFunction uf;
 	
 	public Integrator(double[] vector, int eval, int from, int to) {
-		
+		PolynomialFunction f = new PolynomialFunction(vector);
 		uf = (UnivariateFunction) new PolynomialFunction(vector);
-		
+		System.out.println(f.toString());
 		long startTime = System.nanoTime();
 		simpsonIntegrate(eval, from, to);
 		long endTime = System.nanoTime();
