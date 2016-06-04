@@ -1,10 +1,8 @@
 package com.square.view;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
@@ -21,6 +19,7 @@ public class Chart extends JFrame implements ExampleChart<XYChart> {
 	private double[] xData;
 	private double[] yData;
 
+	@SuppressWarnings("rawtypes")
 	public Chart(double[] vector, int from, int to) {
 		
 		int n = Math.abs(from) + Math.abs(to) + 1;
@@ -47,9 +46,10 @@ public class Chart extends JFrame implements ExampleChart<XYChart> {
 				
 //		new SwingWrapper(getChart()).displayChart();
 		setBounds(950, 100, 500, 500);
-		JPanel pnlChart = new XChartPanel(getChart());      
+		@SuppressWarnings("unchecked")
+		JPanel panelChart = new XChartPanel(getChart());      
 		setVisible(true);
-		this.add(pnlChart);
+		this.add(panelChart);
 		this.validate();
 		
 	}
