@@ -1,33 +1,33 @@
 package com.square.view;
 
+import java.awt.Button;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.OptionPaneUI;
 
 import com.square.model.Integrator;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JScrollBar;
-import javax.swing.JList;
-import java.awt.List;
-import java.awt.TextField;
-
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import java.awt.Font;
-import javax.swing.JSeparator;
-import java.awt.Button;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.Label;
 
 public class MainFrame extends JFrame {
 
@@ -36,49 +36,58 @@ public class MainFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 4040271638401617542L;
 	private JPanel contentPane;
-	private Integer degree;
-	private String sub = "₀₁₂₃₄₅₆₇₈₉";
 	private String sup = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 	private JPanel resultPanel;
 
 	public MainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 753, 469);
+		setBounds(100, 100, 818, 486);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+
+			e.printStackTrace();
+		}
+
 		JScrollPane polynomScrollPanel = new JScrollPane();
 		polynomScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		polynomScrollPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		polynomScrollPanel.setBounds(10, 47, 257, 260);
+		polynomScrollPanel.setBounds(26, 102, 289, 260);
 		contentPane.add(polynomScrollPanel);
 		JViewport polynomView = polynomScrollPanel.getViewport();
 		JPanel polynomPanel = new JPanel();
 		polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), polynomScrollPanel.getHeight() - 10));
 		polynomView.add(polynomPanel);
+		polynomPanel.add(new JTextField(5));
 
 		resultPanel = new JPanel();
 		resultPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		resultPanel.setBounds(278, 11, 433, 296);
+		resultPanel.setBounds(344, 14, 433, 296);
 		contentPane.add(resultPanel);
 		resultPanel.setLayout(new GridLayout(12, 1, 25, 0));
 
 		JLabel degreeLabel = new JLabel("Степінь:");
-		degreeLabel.setBounds(25, 11, 75, 14);
+		degreeLabel.setBounds(26, 14, 99, 14);
 		contentPane.add(degreeLabel);
 
-		JSpinner degreeField = new JSpinner();
-		degreeField.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-		degreeField.setBounds(110, 11, 58, 20);
-		contentPane.add(degreeField);
+		JSpinner degreeSpinnerField = new JSpinner();
+		degreeSpinnerField.setModel(new SpinnerNumberModel(new Integer(2), new Integer(2), null, new Integer(1)));
+		degreeSpinnerField.setBounds(117, 11, 58, 20);
+		contentPane.add(degreeSpinnerField);
+
+		createPolynomFields(2, polynomPanel, polynomView);
 
 		Button integrateButton = new Button("Порахувати");
 
 		integrateButton.addActionListener(e -> {
 			Component[] components = polynomPanel.getComponents();
-			JTextField[] masTextField = new JTextField[(int) degreeField.getValue()];
+			JTextField[] masTextField = new JTextField[(int) degreeSpinnerField.getValue() + 1];
 			int i = 0;
 			for (Component tmp : components) {
 				if (tmp.getClass().equals(JTextField.class)) {
@@ -86,64 +95,65 @@ public class MainFrame extends JFrame {
 					++i;
 				}
 			}
-			
+
 			double[] vector = new double[masTextField.length];
-			
-			for(int j = 0; j<masTextField.length; ++j) {
-				vector[j] = Double.parseDouble(masTextField[j].getText());
-			}
-			doAllIntegrations(vector);
-		});
 
-		integrateButton.setBounds(62, 313, 152, 22);
-		contentPane.add(integrateButton);
-
-		degreeField.addChangeListener(e -> {
-
-			try {
-				JLabel tmpPolynomLabel = new JLabel();
-				tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-				polynomPanel.removeAll();
-				degree = (Integer) (degreeField.getValue());
-				for (int i = 0; i < degree; ++i) {
-					polynomPanel.add(new JTextField(5));
-					if (i > 1) {
-						if (i > 9) {
-							tmpPolynomLabel = new JLabel("x " + sup.charAt(i / 10) + sup.charAt(i % 10));
-							tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-							polynomPanel.add(tmpPolynomLabel);
-						} else {
-							tmpPolynomLabel = new JLabel("x " + sup.charAt(i));
-							tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-							polynomPanel.add(tmpPolynomLabel);
-						}
-
-					} else if (i > 0) {
-						tmpPolynomLabel = new JLabel("x ");
-						tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-						polynomPanel.add(tmpPolynomLabel);
-					}
-					if (i != degree - 1) {
-						tmpPolynomLabel = new JLabel("+");
-						tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-						polynomPanel.add(tmpPolynomLabel);
-					}
-
-					polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), ((i / 2) + 1) * 25));
-
+			for (int j = 0; j < masTextField.length; ++j) {
+				try {
+					vector[j] = Double.parseDouble(masTextField[j].getText());
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(this, "Невірно задані значення", "Помилка",
+							JOptionPane.ERROR_MESSAGE);
 				}
-				repaint();
-				revalidate();
-			} catch (Exception ex) {
-				System.out.println("fail");
-				ex.printStackTrace(System.out);
 			}
+
+			doAllIntegrations(vector);
+
 		});
 
+		integrateButton.setBounds(71, 382, 152, 22);
+		contentPane.add(integrateButton);
+		
+		JSpinner fromSpinner = new JSpinner();
+		fromSpinner.setModel(new SpinnerNumberModel(new Integer(-1), null, 0, new Integer(1)));
+		fromSpinner.setBounds(117, 40, 58, 20);
+		contentPane.add(fromSpinner);
+		
+		JSpinner toSpinner = new JSpinner();
+		toSpinner.setModel(new SpinnerNumberModel(new Integer(1), 0, null, new Integer(1)));
+		toSpinner.setBounds(185, 40, 58, 20);
+		contentPane.add(toSpinner);
+		
+		
+	
+		fromSpinner.addChangeListener(e -> {
+			
+			toSpinner.setModel(new SpinnerNumberModel( new Integer((Integer)toSpinner.getValue()), (Integer)fromSpinner.getValue()+1, null, 1.0));
+			
+		});
+		
+		toSpinner.addChangeListener(e -> {
+			
+			fromSpinner.setModel(new SpinnerNumberModel(new Integer((Integer)fromSpinner.getValue()), null, (Integer)toSpinner.getValue()-1, 1.0));
+			
+		});
+		
+		JLabel lineSegmentLabel = new JLabel("Відрізок від до:");
+		lineSegmentLabel.setBounds(26, 43, 83, 14);
+		contentPane.add(lineSegmentLabel);
+		degreeSpinnerField.addChangeListener(e -> {
+			createPolynomFields((Integer) degreeSpinnerField.getValue(), polynomPanel, polynomView);
+			
+		});
+
+		
 	}
+	
+	
+	
 
 	private void doAllIntegrations(double[] vector) {
-		
+
 		Integrator integ = new Integrator(vector);
 		resultPanel.removeAll();
 		double[] v = integ.getResults();
@@ -178,16 +188,68 @@ public class MainFrame extends JFrame {
 		}
 
 		JLabel tmpLabel;
-		tmpLabel = new JLabel("Сімпсон - Трапеція = " + Math.abs(((v[0] - v[1]) * 100) / v[0]) + " %");
-		tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		resultPanel.add(tmpLabel);
-		tmpLabel = new JLabel("Сімпсон - Ромберг = " + Math.abs(((v[0] - v[2]) * 100) / v[0]) + " %");
-		tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		resultPanel.add(tmpLabel);
-		tmpLabel = new JLabel("Трапеція - Ромберг = " + Math.abs(((v[1] - v[2]) * 100) / v[1]) + " %");
-		tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		resultPanel.add(tmpLabel);
+
+		try {
+			tmpLabel = new JLabel("Сімпсон - Трапеція = "
+					+ new BigDecimal(Math.abs(((v[0] - v[1]) * 100) / v[0])).setScale(35, RoundingMode.HALF_UP) + " %");
+			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+			resultPanel.add(tmpLabel);
+			tmpLabel = new JLabel("Сімпсон - Ромберг = "
+					+ new BigDecimal(Math.abs(((v[0] - v[2]) * 100) / v[0])).setScale(35, RoundingMode.HALF_UP) + " %");
+			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+			resultPanel.add(tmpLabel);
+			tmpLabel = new JLabel("Трапеція - Ромберг = "
+					+ new BigDecimal(Math.abs(((v[1] - v[2]) * 100) / v[1])).setScale(35, RoundingMode.HALF_UP) + " %");
+			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+			resultPanel.add(tmpLabel);
+		} catch (NumberFormatException ex) {
+			JOptionPane.showMessageDialog(this, "Невірно задані значення", "Помилка", JOptionPane.ERROR_MESSAGE);
+		}
 		resultPanel.repaint();
 		resultPanel.revalidate();
 	}
+
+	private void createPolynomFields(Integer degree, JPanel polynomPanel, JViewport polynomView) {
+		
+		try {
+
+			JLabel tmpPolynomLabel = new JLabel();
+			tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+
+			polynomPanel.removeAll();
+
+			JTextField tmpTextField = new JTextField(5);
+			tmpTextField.setText("0");
+			polynomPanel.add(tmpTextField);
+
+			for (int i = 0; i < degree; ++i) {
+				tmpPolynomLabel = new JLabel("+");
+				tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+				polynomPanel.add(tmpPolynomLabel);
+				tmpTextField = new JTextField(5);
+				tmpTextField.setText("0");
+				polynomPanel.add(tmpTextField);
+				if (i + 1 > 9) {
+					tmpPolynomLabel = new JLabel("x " + sup.charAt((i + 1) / 10) + sup.charAt((i + 1) % 10));
+				} else if (i == 0) {
+					tmpPolynomLabel = new JLabel("x ");
+				} else {
+					tmpPolynomLabel = new JLabel("x " + sup.charAt(i + 1));
+				}
+				tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+				polynomPanel.add(tmpPolynomLabel);
+
+				polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), ((i / 3) + 5) * 25));
+
+			}
+
+			repaint();
+			revalidate();
+
+		} catch (Exception ex) {
+			ex.printStackTrace(System.out);
+		}
+	}
+	
+	
 }

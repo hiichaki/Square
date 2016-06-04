@@ -21,9 +21,6 @@ public class Integrator {
 		PolynomialFunction f = new PolynomialFunction(vector);
 		uf = (UnivariateFunction) new PolynomialFunction(vector);
 		
-		System.out.println("To String " + uf.toString());
-		System.out.println("Degree: " + f.degree() + "\n");
-		
 		long startTime = System.nanoTime();
 		simpsonIntegrate();
 		long endTime = System.nanoTime();
