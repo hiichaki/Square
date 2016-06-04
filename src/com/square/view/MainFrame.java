@@ -58,7 +58,7 @@ public class MainFrame extends JFrame {
 		JScrollPane polynomScrollPanel = new JScrollPane();
 		polynomScrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		polynomScrollPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		polynomScrollPanel.setBounds(26, 102, 289, 260);
+		polynomScrollPanel.setBounds(24, 102, 289, 260);
 		contentPane.add(polynomScrollPanel);
 		JViewport polynomView = polynomScrollPanel.getViewport();
 		JPanel polynomPanel = new JPanel();
@@ -68,12 +68,12 @@ public class MainFrame extends JFrame {
 
 		resultPanel = new JPanel();
 		resultPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		resultPanel.setBounds(344, 14, 433, 296);
+		resultPanel.setBounds(348, 14, 433, 348);
 		contentPane.add(resultPanel);
 		resultPanel.setLayout(new GridLayout(12, 1, 25, 0));
 
 		JLabel degreeLabel = new JLabel("Степінь:");
-		degreeLabel.setBounds(26, 14, 99, 14);
+		degreeLabel.setBounds(24, 14, 101, 14);
 		contentPane.add(degreeLabel);
 
 		JSpinner degreeSpinnerField = new JSpinner();
@@ -83,6 +83,21 @@ public class MainFrame extends JFrame {
 
 		createPolynomFields(2, polynomPanel, polynomView);
 
+		JSpinner fromSpinner = new JSpinner();
+		fromSpinner.setModel(new SpinnerNumberModel(new Integer(-1), null, 0, new Integer(1)));
+		fromSpinner.setBounds(117, 40, 58, 20);
+		contentPane.add(fromSpinner);
+		
+		JSpinner toSpinner = new JSpinner();
+		toSpinner.setModel(new SpinnerNumberModel(new Integer(1), 0, null, new Integer(1)));
+		toSpinner.setBounds(185, 40, 58, 20);
+		contentPane.add(toSpinner);
+		
+		JSpinner evalSpinner = new JSpinner();
+		evalSpinner.setModel(new SpinnerNumberModel(new Integer(10000), new Integer(1), null, new Integer(1)));
+		evalSpinner.setBounds(117, 71, 126, 20);
+		contentPane.add(evalSpinner);
+		
 		Button integrateButton = new Button("Порахувати");
 
 		integrateButton.addActionListener(e -> {
@@ -106,23 +121,18 @@ public class MainFrame extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
-
-			doAllIntegrations(vector);
+			
+			int from = (int) fromSpinner.getValue();
+			int to = (int) toSpinner.getValue();
+			int eval = (int) evalSpinner.getValue();
+			
+			doAllIntegrations(vector, eval, from, to);
 
 		});
 
 		integrateButton.setBounds(71, 382, 152, 22);
 		contentPane.add(integrateButton);
 		
-		JSpinner fromSpinner = new JSpinner();
-		fromSpinner.setModel(new SpinnerNumberModel(new Integer(-1), null, 0, new Integer(1)));
-		fromSpinner.setBounds(117, 40, 58, 20);
-		contentPane.add(fromSpinner);
-		
-		JSpinner toSpinner = new JSpinner();
-		toSpinner.setModel(new SpinnerNumberModel(new Integer(1), 0, null, new Integer(1)));
-		toSpinner.setBounds(185, 40, 58, 20);
-		contentPane.add(toSpinner);
 		
 		
 	
@@ -139,8 +149,14 @@ public class MainFrame extends JFrame {
 		});
 		
 		JLabel lineSegmentLabel = new JLabel("Відрізок від до:");
-		lineSegmentLabel.setBounds(26, 43, 83, 14);
+		lineSegmentLabel.setBounds(24, 43, 85, 14);
 		contentPane.add(lineSegmentLabel);
+		
+		
+		
+		JLabel evalLabel = new JLabel("Точність:");
+		evalLabel.setBounds(24, 74, 95, 17);
+		contentPane.add(evalLabel);
 		degreeSpinnerField.addChangeListener(e -> {
 			createPolynomFields((Integer) degreeSpinnerField.getValue(), polynomPanel, polynomView);
 			
@@ -150,11 +166,9 @@ public class MainFrame extends JFrame {
 	}
 	
 	
-	
+	private void doAllIntegrations(double[] vector, int eval, int from, int to) {
 
-	private void doAllIntegrations(double[] vector) {
-
-		Integrator integ = new Integrator(vector);
+		Integrator integ = new Integrator(vector, eval, from, to);
 		resultPanel.removeAll();
 		double[] v = integ.getResults();
 		double[] d = integ.getDuration();
@@ -163,22 +177,22 @@ public class MainFrame extends JFrame {
 			JLabel tmpLabel = null;
 			switch (i) {
 			case 0:
-				tmpLabel = new JLabel("Cімпсон: ");
+				tmpLabel = new JLabel("  Cімпсон: ");
 				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				break;
 			case 1:
-				tmpLabel = new JLabel("Трапеція: ");
+				tmpLabel = new JLabel("  Трапеція: ");
 				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				break;
 			case 2:
-				tmpLabel = new JLabel("Ромберг: ");
+				tmpLabel = new JLabel("  Ромберг: ");
 				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				break;
 			}
 
 			tmpLabel.setText(tmpLabel.getText() + v[i]);
 			resultPanel.add(tmpLabel);
-			tmpLabel = new JLabel("Час виконання: " + d[i] + "ms");
+			tmpLabel = new JLabel("  Час виконання: " + d[i] + "ms");
 			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 			resultPanel.add(tmpLabel);
 			JSeparator separator = new JSeparator();
@@ -190,15 +204,15 @@ public class MainFrame extends JFrame {
 		JLabel tmpLabel;
 
 		try {
-			tmpLabel = new JLabel("Сімпсон - Трапеція = "
+			tmpLabel = new JLabel("  Сімпсон - Трапеція = "
 					+ new BigDecimal(Math.abs(((v[0] - v[1]) * 100) / v[0])).setScale(35, RoundingMode.HALF_UP) + " %");
 			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 			resultPanel.add(tmpLabel);
-			tmpLabel = new JLabel("Сімпсон - Ромберг = "
+			tmpLabel = new JLabel("  Сімпсон - Ромберг = "
 					+ new BigDecimal(Math.abs(((v[0] - v[2]) * 100) / v[0])).setScale(35, RoundingMode.HALF_UP) + " %");
 			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 			resultPanel.add(tmpLabel);
-			tmpLabel = new JLabel("Трапеція - Ромберг = "
+			tmpLabel = new JLabel("  Трапеція - Ромберг = "
 					+ new BigDecimal(Math.abs(((v[1] - v[2]) * 100) / v[1])).setScale(35, RoundingMode.HALF_UP) + " %");
 			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 			resultPanel.add(tmpLabel);

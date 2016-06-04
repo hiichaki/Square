@@ -17,52 +17,52 @@ public class Integrator {
 	
 	private UnivariateFunction uf;
 	
-	public Integrator(double[] vector) {
-		PolynomialFunction f = new PolynomialFunction(vector);
+	public Integrator(double[] vector, int eval, int from, int to) {
+		
 		uf = (UnivariateFunction) new PolynomialFunction(vector);
 		
 		long startTime = System.nanoTime();
-		simpsonIntegrate();
+		simpsonIntegrate(eval, from, to);
 		long endTime = System.nanoTime();
 
 		duration[0] = (endTime - startTime)/10000; 
 	
 		startTime = System.nanoTime();;
-		trapezoidIntegrate();
+		trapezoidIntegrate(eval, from, to);
 		endTime = System.nanoTime();
 		
 		duration[1] = (endTime - startTime)/10000; 
 		
 		startTime = System.nanoTime();;
-		rombergIntegrate();
+		rombergIntegrate(eval, from, to);
 		endTime = System.nanoTime();
 		
 		duration[2] = (endTime - startTime)/10000; 
 			
 	}
 	
-	private void simpsonIntegrate() {
+	private void simpsonIntegrate(int eval, int from, int to) {
 		simpson = new SimpsonIntegrator();
 		
-		double integral = simpson.integrate(100000, uf, 2,3);
+		double integral = simpson.integrate(100000, uf, from, to);
 		
 		results[0] = integral;
 
 	}
 	
-	private void trapezoidIntegrate() {
+	private void trapezoidIntegrate(int eval, int from, int to) {
 		trapeze = new TrapezoidIntegrator();
 		
-		double integral = trapeze.integrate(100000, uf, 2,3);
+		double integral = trapeze.integrate(100000, uf, from, to);
 		
 		results[1] = integral;
 
 	}
 	
-	private void rombergIntegrate() {
+	private void rombergIntegrate(int eval, int from, int to) {
 		romberg = new RombergIntegrator();
 
-		double integral = romberg.integrate(100000, uf, 2,3);
+		double integral = romberg.integrate(100000, uf, from, to);
 		
 		results[2] = integral;
 
