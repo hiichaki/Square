@@ -19,7 +19,7 @@ public class Chart extends JFrame implements ExampleChart<XYChart> {
 	private double[] xData;
 	private double[] yData;
 
-	@SuppressWarnings("rawtypes")
+	
 	public Chart(double[] vector, int from, int to) {
 
 		int n = Math.abs(from) + Math.abs(to) + 1;
@@ -40,13 +40,14 @@ public class Chart extends JFrame implements ExampleChart<XYChart> {
 			xData[j] = x;
 			++j;
 		}
-
+		
+		// all program close instead
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 
 		// new SwingWrapper(getChart()).displayChart();
 		setBounds(950, 100, 500, 500);
-		@SuppressWarnings("unchecked")
-		JPanel panelChart = new XChartPanel(getChart());
+		
+		JPanel panelChart = new XChartPanel<XYChart>(getChart());
 		setVisible(true);
 		this.add(panelChart);
 		this.validate();

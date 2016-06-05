@@ -28,7 +28,7 @@ public class Integrator {
 		duration[0] = (endTime - startTime) / 10000;
 
 		startTime = System.nanoTime();
-		;
+		
 		trapezoidIntegrate(eval, from, to);
 		endTime = System.nanoTime();
 

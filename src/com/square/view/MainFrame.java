@@ -52,7 +52,8 @@ public class MainFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		
+		// systemLike UI
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
@@ -105,7 +106,7 @@ public class MainFrame extends JFrame {
 		contentPane.add(evalSpinner);
 
 		Button integrateButton = new Button("Порахувати");
-
+		
 		integrateButton.addActionListener(e -> {
 			Component[] components = polynomPanel.getComponents();
 			JTextField[] masTextField = new JTextField[(int) degreeSpinnerField.getValue() + 1];
@@ -119,7 +120,10 @@ public class MainFrame extends JFrame {
 
 			vector = new double[masTextField.length];
 
+			// using Groovy to calculate string  
 			GroovyShell shell = App.createMathShell();
+			
+//			shell.setVariable("x", 0);  //set values
 
 			for (int j = 0; j < masTextField.length; ++j) {
 
@@ -174,7 +178,6 @@ public class MainFrame extends JFrame {
 		Button drawButton = new Button("Намалювати");
 
 		drawButton.addActionListener(e -> {
-			// new DrawFrame(vector);
 			new Chart(vector, (int) fromSpinner.getValue(), (int) toSpinner.getValue());
 		});
 
@@ -244,6 +247,7 @@ public class MainFrame extends JFrame {
 		resultPanel.revalidate();
 	}
 
+	//	dynamic creation of TextFields + Labels
 	private void createPolynomFields(Integer degree, JPanel polynomPanel, JViewport polynomView) {
 
 		try {
@@ -280,7 +284,7 @@ public class MainFrame extends JFrame {
 				polynomPanel.setPreferredSize(new Dimension(polynomView.getWidth(), ((i / 3) + 2) * 25));
 
 			}
-
+			// select all in the TextField when focusing
 			for (Component tmp : polynomPanel.getComponents()) {
 				if (tmp.getClass().equals(JTextField.class)) {
 					((JTextField) tmp).addFocusListener(new FocusListener() {
