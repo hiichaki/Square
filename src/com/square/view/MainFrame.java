@@ -52,7 +52,7 @@ public class MainFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		// systemLike UI
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -106,7 +106,7 @@ public class MainFrame extends JFrame {
 		contentPane.add(evalSpinner);
 
 		Button integrateButton = new Button("Порахувати");
-		
+
 		integrateButton.addActionListener(e -> {
 			Component[] components = polynomPanel.getComponents();
 			JTextField[] masTextField = new JTextField[(int) degreeSpinnerField.getValue() + 1];
@@ -120,10 +120,10 @@ public class MainFrame extends JFrame {
 
 			vector = new double[masTextField.length];
 
-			// using Groovy to calculate string  
+			// using Groovy to calculate string
 			GroovyShell shell = App.createMathShell();
-			
-//			shell.setVariable("x", 0);  //set values
+
+			// shell.setVariable("x", 0); //set values
 
 			for (int j = 0; j < masTextField.length; ++j) {
 
@@ -247,7 +247,7 @@ public class MainFrame extends JFrame {
 		resultPanel.revalidate();
 	}
 
-	//	dynamic creation of TextFields + Labels
+	// dynamic creation of TextFields + Labels
 	private void createPolynomFields(Integer degree, JPanel polynomPanel, JViewport polynomView) {
 
 		try {
@@ -269,15 +269,21 @@ public class MainFrame extends JFrame {
 				tmpTextField = new JTextField(5);
 				tmpTextField.setText("0");
 				polynomPanel.add(tmpTextField);
-				if (i + 1 > 99) {
-					tmpPolynomLabel = new JLabel("x " + sup.charAt((i + 1) / 100) + sup.charAt((i + 1) % 100));
-				} else if (i + 1 > 9) {
-					tmpPolynomLabel = new JLabel("x " + sup.charAt((i + 1) / 10) + sup.charAt((i + 1) % 10));
-				} else if (i == 0) {
+
+				if (i == 0) {
 					tmpPolynomLabel = new JLabel("x ");
 				} else {
-					tmpPolynomLabel = new JLabel("x " + sup.charAt(i + 1));
+					int[] digits = App.getDigits(i + 1);
+					StringBuilder deg = new StringBuilder();
+
+					for (int c : digits) {
+						deg.append(sup.charAt(c));
+					}
+
+					tmpPolynomLabel = new JLabel("x " + deg.reverse().toString());
+
 				}
+
 				tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				polynomPanel.add(tmpPolynomLabel);
 

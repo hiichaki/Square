@@ -38,9 +38,26 @@ public class App {
         return shell;
         
     }
+	
+	public static int getCountOfDigits(long number) {
+		return(number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
+		
+	}
+	
+	public static int[] getDigits(int number) {
+		
+		int[] digits = new int[getCountOfDigits(number)];
+		for(int i = 0; number > 0; ++i) {
+			digits[i] = number % 10;
+			number = number / 10;
+		}
+		
+		return digits;
+		
+	}
 
 	public static void main(String[] args) {
-
+		
 		try {
 			MainFrame frame = new MainFrame();
 			frame.setVisible(true);
