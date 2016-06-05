@@ -44,6 +44,7 @@ public class MainFrame extends JFrame {
 	private JPanel resultPanel;
 	private double[] vector;
 	private JTextField tmpTextField;
+	private Button drawButton;
 
 	public MainFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -175,7 +176,8 @@ public class MainFrame extends JFrame {
 		evalLabel.setBounds(24, 74, 95, 17);
 		contentPane.add(evalLabel);
 
-		Button drawButton = new Button("Намалювати");
+		drawButton = new Button("Намалювати");
+		drawButton.setEnabled(false);
 
 		drawButton.addActionListener(e -> {
 			new Chart(vector, (int) fromSpinner.getValue(), (int) toSpinner.getValue());
@@ -243,10 +245,12 @@ public class MainFrame extends JFrame {
 		} catch (NumberFormatException ex) {
 			JOptionPane.showMessageDialog(this, "Невірно задані значення", "Помилка", JOptionPane.ERROR_MESSAGE);
 		}
+		
+		drawButton.setEnabled(true);
 		resultPanel.repaint();
 		resultPanel.revalidate();
 	}
-
+	
 	// dynamic creation of TextFields + Labels
 	private void createPolynomFields(Integer degree, JPanel polynomPanel, JViewport polynomView) {
 
@@ -258,7 +262,7 @@ public class MainFrame extends JFrame {
 			polynomPanel.removeAll();
 
 			tmpTextField = new JTextField(5);
-			tmpTextField.setText("0");
+			tmpTextField.setText("1");
 
 			polynomPanel.add(tmpTextField);
 
@@ -267,7 +271,7 @@ public class MainFrame extends JFrame {
 				tmpPolynomLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				polynomPanel.add(tmpPolynomLabel);
 				tmpTextField = new JTextField(5);
-				tmpTextField.setText("0");
+				tmpTextField.setText("1");
 				polynomPanel.add(tmpTextField);
 
 				if (i == 0) {
@@ -276,8 +280,8 @@ public class MainFrame extends JFrame {
 					int[] digits = App.getDigits(i + 1);
 					StringBuilder deg = new StringBuilder();
 
-					for (int c : digits) {
-						deg.append(sup.charAt(c));
+					for (int digit : digits) {
+						deg.append(sup.charAt(digit));
 					}
 
 					tmpPolynomLabel = new JLabel("x " + deg.reverse().toString());

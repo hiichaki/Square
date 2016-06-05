@@ -40,7 +40,7 @@ public class App {
     }
 	
 	public static int getCountOfDigits(long number) {
-		return(number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
+		return (number == 0) ? 1 : (int) Math.ceil(Math.log10(Math.abs(number) + 0.5));
 		
 	}
 	
