@@ -211,7 +211,7 @@ public class MainFrame extends JFrame {
 				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				break;
 			case 2:
-				tmpLabel = new JLabel("  Ромберг: ");
+				tmpLabel = new JLabel("  Прямокутники: ");
 				tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				break;
 			}
@@ -234,11 +234,11 @@ public class MainFrame extends JFrame {
 					+ new BigDecimal(Math.abs(((v[0] - v[1]) * 100) / v[0])).setScale(35, RoundingMode.HALF_UP) + " %");
 			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 			resultPanel.add(tmpLabel);
-			tmpLabel = new JLabel("  Сімпсон - Ромберг = "
+			tmpLabel = new JLabel("  Сімпсон - Прямокутники = "
 					+ new BigDecimal(Math.abs(((v[0] - v[2]) * 100) / v[0])).setScale(35, RoundingMode.HALF_UP) + " %");
 			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 			resultPanel.add(tmpLabel);
-			tmpLabel = new JLabel("  Трапеція - Ромберг = "
+			tmpLabel = new JLabel("  Трапеція - Прямокутники = "
 					+ new BigDecimal(Math.abs(((v[1] - v[2]) * 100) / v[1])).setScale(35, RoundingMode.HALF_UP) + " %");
 			tmpLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
 			resultPanel.add(tmpLabel);
